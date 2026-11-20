@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#08060c">
+<title>Премия TLEY</title>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<style>
+*{box-sizing:border-box}
+:root{--pink:#ff8bd8;--purple:#b98cff;--muted:#b9a9c2}
+body{margin:0;min-height:100vh;color:#fff;background:radial-gradient(ellipse at 50% -10%,#4a2057 0%,transparent 42%),radial-gradient(ellipse at 5% 45%,#24102f 0%,transparent 35%),#08060c;font-family:Arial,sans-serif}
+header{height:76px;display:flex;align-items:center;justify-content:center;border-bottom:1px solid #57315d80;background:#09070dcc;backdrop-filter:blur(14px);position:sticky;top:0;z-index:5}
+.logo{font-size:22px;font-weight:900;letter-spacing:7px;background:linear-gradient(90deg,var(--pink),var(--purple));-webkit-background-clip:text;background-clip:text;color:transparent}
+main{max-width:1200px;margin:auto;padding:52px 24px 90px}
+.intro{text-align:center;margin:0 0 58px}
+.intro h1{margin:0;font-family:Georgia,serif;font-size:clamp(42px,8vw,82px);letter-spacing:5px;background:linear-gradient(90deg,#ff9ddd,#c5a0ff);-webkit-background-clip:text;background-clip:text;color:transparent}
+.intro p{color:#c3b2ca;font-size:12px;letter-spacing:5px;margin:14px 0 0}
+.section-title{text-align:center;margin:0 0 24px;font-size:13px;letter-spacing:4px;color:#e9c6f2;font-weight:800}
+.featured-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:26px;margin-bottom:62px}
+.card{position:relative;isolation:isolate;overflow:hidden;text-align:center;border:1px solid #a56bb55c;border-radius:24px;background:radial-gradient(ellipse at 50% 18%,#6c32775c,transparent 62%),linear-gradient(145deg,#21152b,#100b16 72%);box-shadow:0 18px 55px #0008,inset 0 1px #ffffff13;padding:24px 20px 27px;min-width:0}
+.card:before{content:"";position:absolute;z-index:-1;width:230px;height:230px;left:50%;top:-125px;transform:translateX(-50%);border-radius:50%;background:#e879ff30;filter:blur(55px)}
+.featured-card{min-height:440px;padding:24px 20px 30px;border-color:#dc8be78a;background:radial-gradient(ellipse at 50% 25%,#8b3d9466,transparent 65%),linear-gradient(145deg,#29152f,#100b17)}
+.art{width:100%;height:210px;object-fit:contain;display:block;margin:0 auto 10px;filter:drop-shadow(0 10px 22px #bd6bff38)}
+.featured-card .art{height:275px;margin-bottom:2px}
+.card h2{margin:8px 0 10px;color:#f4c9ff;font-family:Georgia,serif;font-size:clamp(21px,3vw,30px);letter-spacing:1.5px;text-transform:uppercase}
+.featured-card h2{font-size:clamp(27px,4vw,38px);background:linear-gradient(90deg,#ffb3e6,#d6b5ff);-webkit-background-clip:text;background-clip:text;color:transparent}
+.card p{color:var(--muted);font-size:13px;margin:0 0 20px}
+.vote{border:1px solid #efadf4;border-radius:8px;padding:13px 25px;background:linear-gradient(100deg,#c13c9b,#7945c4);color:white;font-weight:800;font-size:12px;letter-spacing:1.5px;cursor:pointer;box-shadow:0 0 22px #bd42d933;transition:transform .2s,box-shadow .2s}
+.vote:hover{transform:translateY(-2px);box-shadow:0 0 30px #df70ff77}
+.vote:active{transform:scale(.97)}
+.carousel-wrap{max-width:760px;margin:0 auto}
+.carousel{position:relative;overflow:hidden;border-radius:26px}
+.slide{display:none;min-height:430px;flex-direction:column;align-items:center;justify-content:center;padding:24px 20px 30px;transition:opacity .25s,transform .25s}
+.slide.active{display:flex;animation:slideIn .32s ease both}
+@keyframes slideIn{from{opacity:0;transform:translateX(22px)}to{opacity:1;transform:translateX(0)}}
+.slide .art{height:245px;margin-bottom:10px}
+.slide h2{font-size:clamp(23px,4vw,32px)}
+.carousel-controls{display:flex;align-items:center;justify-content:center;gap:24px;margin-top:18px}
+.arrow{width:48px;height:48px;border-radius:50%;border:1px solid #d99be8;background:linear-gradient(135deg,#42214f,#1a1023);color:#fff;font-size:25px;cursor:pointer;box-shadow:0 0 20px #b54dd933;transition:.2s}
+.arrow:hover{background:linear-gradient(135deg,#873d8d,#58378e);transform:scale(1.06)}
+.arrow:disabled{opacity:.35;cursor:not-allowed;transform:none}
+.counter{min-width:54px;text-align:center;color:#e9c6f2;font-size:14px;letter-spacing:2px}
+.dots{display:flex;justify-content:center;gap:8px;margin-top:16px}
+.dot{width:7px;height:7px;border-radius:50%;border:0;padding:0;background:#6b5876;cursor:pointer}
+.dot.active{width:22px;border-radius:8px;background:linear-gradient(90deg,var(--pink),var(--purple))}
+@media(max-width:650px){
+ main{padding:38px 14px 60px}
+ .intro{margin-bottom:43px}
+ .featured-grid{grid-template-columns:1fr;gap:19px;margin-bottom:48px}
+ .featured-card{min-height:390px}
+ .featured-card .art{height:245px}
+ .art{height:205px}
+ .slide{min-height:390px;padding:20px 14px 25px}
+ .slide .art{height:220px}
+ .carousel-controls{gap:18px}
+}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<header><div class="logo">TLEY AWARDS</div></header>
+<main>
+  <section class="intro"><h1>НОМИНАЦИИ</h1><p>ПРЕМИЯ TLEY · 2026</p></section>
+  <h3 class="section-title">ГЛАВНЫЕ НОМИНАЦИИ</h3>
+  <section class="featured-grid" id="featured"></section>
+  <h3 class="section-title">ОСТАЛЬНЫЕ НОМИНАЦИИ</h3>
+  <section class="carousel-wrap">
+    <div class="carousel" id="carousel" aria-live="polite"></div>
+    <div class="carousel-controls">
+      <button class="arrow" id="prev" aria-label="Предыдущая номинация">‹</button>
+      <span class="counter" id="counter">1 / 9</span>
+      <button class="arrow" id="next" aria-label="Следующая номинация">›</button>
+    </div>
+    <div class="dots" id="dots" aria-label="Выбрать номинацию"></div>
+  </section>
+</main>
+<script>
+const featured=[
+ {name:"TLAY KING",image:"images/tlay-king.png"},
+ {name:"TLEY QUEEN",image:"images/tley-queen.png"}
+];
+const regular=[
+ {name:"Завоз года",image:"images/zavoz-goda.png"},
+ {name:"Человек-мем года",image:"images/mem-year.png"},
+ {name:"Прорыв года",image:"images/breakthrough-year.png"},
+ {name:"ИРЛ-стример года",image:"images/irl-streamer.png"},
+ {name:"Пара / Шип года",image:"images/ship-year.png"},
+ {name:"Тренд года",image:"images/trend-year.png"},
+ {name:"Аудитория года",image:"images/audience-year.png"},
+ {name:"Хейт года",image:"images/hate-year.png"},
+ {name:"Коллаба года",image:"images/collab-year.png"}
+];
+function makeCard(item,isFeatured=false){
+ const card=document.createElement("article");
+ card.className=isFeatured?"card featured-card":"card slide";
+ const img=document.createElement("img");
+ img.className="art";img.src=item.image;img.alt="Стеклянный арт-объект для номинации "+item.name;
+ const title=document.createElement("h2");title.textContent=item.name;
+ const description=document.createElement("p");description.textContent="Выбери своего номинанта";
+ const button=document.createElement("button");button.className="vote";button.textContent="ПРОГОЛОСОВАТЬ";
+ button.addEventListener("click",()=>alert("Кандидаты появятся позже!"));
+ card.append(img,title,description,button);return card;
+}
+const featuredBox=document.getElementById("featured");
+featured.forEach(item=>featuredBox.append(makeCard(item,true)));
+const carousel=document.getElementById("carousel");
+const dotsBox=document.getElementById("dots");
+const counter=document.getElementById("counter");
+const prev=document.getElementById("prev");
+const next=document.getElementById("next");
+let current=0;
+const slides=regular.map(item=>{const slide=makeCard(item);carousel.append(slide);return slide;});
+const dots=regular.map((item,index)=>{
+ const dot=document.createElement("button");dot.className="dot";dot.setAttribute("aria-label","Показать номинацию "+item.name);
+ dot.addEventListener("click",()=>showSlide(index));dotsBox.append(dot);return dot;
+});
+function showSlide(index){
+ current=(index+slides.length)%slides.length;
+ slides.forEach((slide,i)=>slide.classList.toggle("active",i===current));
+ dots.forEach((dot,i)=>dot.classList.toggle("active",i===current));
+ counter.textContent=(current+1)+" / "+slides.length;
+ prev.disabled=current===0;next.disabled=current===slides.length-1;
+}
+prev.addEventListener("click",()=>showSlide(current-1));
+next.addEventListener("click",()=>showSlide(current+1));
+showSlide(0);
+const tg=window.Telegram?.WebApp;if(tg){tg.ready();tg.expand();}
+</script>
+</body>
+</html>
